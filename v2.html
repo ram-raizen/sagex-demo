@@ -60,14 +60,16 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
 .vpc.glow-g{border-color:rgba(110,231,183,.3);box-shadow:0 0 60px rgba(110,231,183,.1),0 8px 48px rgba(0,0,0,.5)}
 .vpc-tag{position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--card);padding:0 12px;margin-top:-9px;font-size:10px;font-weight:700;color:rgba(96,165,250,.35);letter-spacing:.05em;white-space:nowrap;z-index:10}
 
-.scene{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;padding:24px 20px 80px;visibility:hidden;opacity:0}
+.scene{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;padding:24px 20px 80px;visibility:hidden;opacity:0;will-change:opacity,visibility}
 .scene-center{justify-content:center}
 
 .bub{width:100%;max-width:320px;padding:14px 18px;background:var(--elev);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin:8px 0;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.3)}
 .bub::after{content:'';position:absolute;bottom:-6px;left:50%;margin-left:-6px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid var(--elev)}
 .bub-t{font-size:14px;font-weight:600;color:var(--t1);line-height:1.55}
 
-.fcard{width:140px;min-height:120px;background:rgba(96,165,250,.06);border:1.5px solid rgba(96,165,250,.18);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px 10px;box-shadow:0 4px 28px rgba(0,0,0,.3)}
+.fcard{width:140px;min-height:120px;background:rgba(96,165,250,.06);border:1.5px solid rgba(96,165,250,.18);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px 10px;box-shadow:0 4px 28px rgba(0,0,0,.3);cursor:pointer;transition:border-color .3s,box-shadow .3s}
+.fcard:active{border-color:rgba(96,165,250,.45);box-shadow:0 0 28px rgba(96,165,250,.25),0 4px 28px rgba(0,0,0,.3)}
+.tap-hint{font-size:11px;font-weight:600;color:var(--t3);margin-top:10px;text-align:center}
 .fcard .nm{font-size:12px;font-weight:700;text-align:center;line-height:1.3;color:var(--t1)}
 
 .doc-badge{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:10px;font-size:12px;font-weight:700;color:var(--blue);margin-bottom:10px;flex-shrink:0}
@@ -76,7 +78,10 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
 .ocard{width:140px;min-height:120px;background:rgba(110,231,183,.06);border:1.5px solid rgba(110,231,183,.18);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px 10px;box-shadow:0 4px 28px rgba(0,0,0,.3)}
 .ocard .nm{font-size:12px;font-weight:700;text-align:center;color:var(--green)}
 
-.conn{width:2px;height:20px;margin:6px 0;background:rgba(255,255,255,.05);border-radius:1px;flex-shrink:0}
+.conn{width:2px;height:28px;margin:6px auto;border-radius:1px;flex-shrink:0;background:rgba(255,255,255,.06)}
+.conn-b{background:linear-gradient(to bottom,transparent,rgba(96,165,250,.25),transparent)}
+.conn-r{background:linear-gradient(to bottom,transparent,rgba(252,165,165,.22),transparent)}
+.conn-g{background:linear-gradient(to bottom,transparent,rgba(110,231,183,.22),transparent)}
 
 .pc{border-radius:14px;overflow:hidden;width:100%;max-width:340px}
 .pc.messy{border:1px solid rgba(252,165,165,.18);background:var(--elev);max-height:200px;overflow:hidden}
@@ -175,16 +180,19 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
 
   <div class="scene scene-center" id="scIntro">
     <div class="bub" id="bub1"><div class="bub-t" id="bub1T"></div></div>
-    <div style="height:14px"></div>
+    <div class="conn conn-b"></div>
     <div class="fcard" id="src"><div id="srcIco"></div><div class="nm" id="srcNm"></div></div>
+    <div class="tap-hint" id="tapHint">Tap the file to peek inside</div>
   </div>
 
   <div class="scene" id="scScan">
     <div class="doc-badge" id="docBadge"></div>
+    <div class="conn conn-r"></div>
     <div class="pc messy" id="mC"></div>
     <div class="pcount" id="pcount"><span class="grad" id="pcountN">0</span> problems found</div>
+    <div class="conn conn-r"></div>
     <div class="bub" id="bub2"><div class="bub-t" id="bub2T"></div></div>
-    <div class="conn"></div>
+    <div class="conn conn-b"></div>
     <button class="cta" id="cta"></button>
   </div>
 
@@ -196,7 +204,9 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
       </div>
       <div class="orb" id="orbP"><div class="od"></div><div class="od"></div><div class="od"></div></div>
     </div>
+    <div class="conn conn-b"></div>
     <div class="pbar" id="pbar"><div class="fill" id="pfill"></div></div>
+    <div class="conn conn-b"></div>
     <div class="stg-stack" id="stgStack">
       <div class="stg" id="stg0"><div class="stg-h"></div><div class="stg-s"></div></div>
       <div class="stg" id="stg1"><div class="stg-h"></div><div class="stg-s"></div></div>
@@ -210,7 +220,7 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
       <svg viewBox="0 0 36 36" width="44" height="44"><circle cx="18" cy="18" r="16" fill="none" stroke="rgba(110,231,183,.1)" stroke-width="2"/><circle id="ckC" cx="18" cy="18" r="16" fill="none" stroke="var(--green)" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100"/><path id="ckP" d="M11 18l5 5 9-9" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="28" stroke-dashoffset="28"/></svg>
       <div class="nm" id="oNm">Cleaned</div>
     </div>
-    <div style="height:10px"></div>
+    <div class="conn conn-g"></div>
     <div class="bub" id="bub3"><div class="bub-t" id="bub3T"></div></div>
   </div>
 
@@ -220,7 +230,9 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
       <div class="ba-divider"></div>
       <div class="ba-side ba-aft" id="baAft"><div class="ba-tag">AFTER</div></div>
     </div>
-    <div id="bdgW" style="margin-top:10px;width:100%;max-width:340px"></div>
+    <div class="conn conn-g"></div>
+    <div id="bdgW" style="width:100%;max-width:340px"></div>
+    <div class="conn conn-g"></div>
     <div class="ds" id="dsW"><div class="ds-h grad">Now your AI tools can actually work</div><div class="ds-p" id="dsP"></div></div>
   </div>
 
@@ -513,12 +525,12 @@ function buildTimeline(){
     pin:'#pinVP',
     start:'top top',
     end:'+=5000',
-    scrub:1,
+    scrub:0.5,
     snap:{
       snapTo:'labels',
-      duration:{min:0.3,max:1.2},
-      delay:0.15,
-      ease:'power1.inOut'
+      duration:{min:0.2,max:0.7},
+      delay:0.12,
+      ease:'power2.inOut'
     },
     onUpdate:function(self){
       var p=self.progress;
@@ -569,6 +581,13 @@ nxt.addEventListener('click',function(){
 });
 
 vrTry.addEventListener('click',function(){switchIndustry()});
+
+src.addEventListener('click',function(){
+  if(!masterTL||!masterTL.scrollTrigger) return;
+  var st=masterTL.scrollTrigger;
+  var lp=LABELS.messyPreview/masterTL.duration();
+  gsap.to(window,{scrollTo:st.start+(st.end-st.start)*lp,duration:0.8,ease:'power2.inOut'});
+});
 
 function switchIndustry(){
   var nextIdx=(KEYS.indexOf(industry)+1)%KEYS.length;
