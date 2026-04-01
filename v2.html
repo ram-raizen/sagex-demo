@@ -37,7 +37,7 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
 .grad{background:linear-gradient(135deg,var(--blue),#A78BFA,var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
 .steps{display:flex;align-items:center;width:100%;max-width:380px;margin-bottom:12px;flex-shrink:0}
-.stp{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.stp{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;cursor:pointer}
 .stp-d{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.08);transition:all .4s}
 .stp.on .stp-d{background:var(--blue);box-shadow:0 0 12px var(--gblue)}
 .stp.done .stp-d{background:var(--green);box-shadow:0 0 10px var(--ggreen)}
@@ -60,7 +60,7 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
 .vpc.glow-g{border-color:rgba(110,231,183,.3);box-shadow:0 0 60px rgba(110,231,183,.1),0 8px 48px rgba(0,0,0,.5)}
 .vpc-tag{position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--card);padding:0 12px;margin-top:-9px;font-size:10px;font-weight:700;color:rgba(96,165,250,.35);letter-spacing:.05em;white-space:nowrap;z-index:10}
 
-.scene{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;padding:24px 20px 80px;visibility:hidden;opacity:0;will-change:opacity,visibility}
+.scene{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;padding:24px 20px 24px;visibility:hidden;opacity:0;will-change:opacity,visibility,transform}
 .scene-center{justify-content:center}
 
 .bub{width:100%;max-width:320px;padding:14px 18px;background:var(--elev);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin:8px 0;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.3)}
@@ -148,8 +148,9 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
 
 .scroll-hint{position:absolute;bottom:calc(16px + var(--sab));left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--t3);z-index:20;animation:hintBob 2s ease-in-out infinite}
 
-.nxt{position:fixed;bottom:calc(14px + var(--sab));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:420px;padding:14px 22px;background:linear-gradient(135deg,#60A5FA,#818CF8);color:#0F172A;border:none;border-radius:16px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 32px rgba(96,165,250,.25),0 8px 24px rgba(0,0,0,.4);z-index:50;transition:opacity .3s}
-.nxt:active{transform:translateX(-50%) scale(.96)}
+.nav{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:4px;z-index:12}
+.nav-btn{width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;backdrop-filter:blur(8px);font-family:inherit;padding:0}
+.nav-btn:active{background:rgba(96,165,250,.15);color:var(--blue)}
 
 .ptc{position:fixed;width:6px;height:6px;border-radius:50%;pointer-events:none;z-index:200;animation:ptcFly .7s ease-out forwards}
 
@@ -177,6 +178,10 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
 
 <div class="vpc" id="vpc">
   <div class="vpc-tag">Your Cloud Perimeter</div>
+  <div class="nav" id="nav">
+    <button class="nav-btn" id="navUp" aria-label="Previous"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 10l4-4 4 4"/></svg></button>
+    <button class="nav-btn" id="navDown" aria-label="Next"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></button>
+  </div>
 
   <div class="scene scene-center" id="scIntro">
     <div class="bub" id="bub1"><div class="bub-t" id="bub1T"></div></div>
@@ -257,8 +262,6 @@ body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(-
 
 </div>
 </div>
-
-<button class="nxt" id="nxt"></button>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
@@ -345,7 +348,7 @@ var scIntro=document.getElementById('scIntro'),
     vrTry=document.getElementById('vrTry'),
     vpc=document.getElementById('vpc'),
     scrollHint=document.getElementById('scrollHint'),
-    nxt=document.getElementById('nxt'),
+    navUp=document.getElementById('navUp'),navDown=document.getElementById('navDown'),
     indCards=document.getElementById('indCards'),
     stepsEl=document.getElementById('steps');
 
@@ -374,6 +377,13 @@ function burst(el,color,count){
     p.style.width=(4+Math.random()*4)+'px';p.style.height=p.style.width;
     document.body.appendChild(p);setTimeout(function(){p.remove()},750);
   }
+}
+
+function scrollToLabel(name){
+  if(!masterTL||!masterTL.scrollTrigger) return;
+  var st=masterTL.scrollTrigger;
+  var lp=LABELS[name]/masterTL.duration();
+  gsap.to(window,{scrollTo:st.start+(st.end-st.start)*lp,duration:0.8,ease:'power2.inOut'});
 }
 
 function renderMessy(d){
@@ -416,17 +426,6 @@ function renderAll(){
   dsP.textContent=d.ds;
 }
 
-function getNxtText(p){
-  if(p<0.07) return 'Scroll down';
-  if(p<0.14) return 'See the problems';
-  if(p<0.28) return 'Fix with SageX';
-  if(p<0.6) return 'Processing...';
-  if(p<0.72) return 'See the result';
-  if(p<0.82) return 'Compare';
-  if(p<0.9) return 'The takeaway';
-  return 'Try another industry';
-}
-
 function buildTimeline(){
   if(masterTL){
     if(masterTL.scrollTrigger) masterTL.scrollTrigger.kill();
@@ -434,7 +433,7 @@ function buildTimeline(){
   }
   ScrollTrigger.getAll().forEach(function(st){st.kill()});
 
-  allScenes.forEach(function(s){gsap.set(s,{autoAlpha:0})});
+  allScenes.forEach(function(s){gsap.set(s,{autoAlpha:0,y:0,scale:1,transformOrigin:'50% 0%'})});
   gsap.set(scIntro,{autoAlpha:1});
   gsap.set(scrollHint,{autoAlpha:1});
 
@@ -469,7 +468,8 @@ function buildTimeline(){
     .addLabel('seeFile',3)
 
     .addLabel('messyPreview',6)
-    .to(scIntro,{autoAlpha:0,duration:1.2},6)
+    .to(scIntro,{autoAlpha:0.1,y:'-50%',scale:0.85,duration:1.5},6)
+    .to(scIntro,{autoAlpha:0,y:0,scale:1,duration:0.5},8)
     .fromTo(scScan,{autoAlpha:0},{autoAlpha:1,duration:1.2},6.5)
     .fromTo(pills,{autoAlpha:0,y:8},{autoAlpha:1,y:0,stagger:0.2,duration:0.4},7.5)
     .fromTo(pcount,{autoAlpha:0},{autoAlpha:1,duration:0.4},9)
@@ -479,7 +479,8 @@ function buildTimeline(){
     .fromTo(cta,{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:0.8,ease:'back.out(1.3)'},10.8)
 
     .addLabel('processing',13)
-    .to(scScan,{autoAlpha:0,duration:1},13)
+    .to(scScan,{autoAlpha:0.1,y:'-50%',scale:0.85,duration:1.5},13)
+    .to(scScan,{autoAlpha:0,y:0,scale:1,duration:0.5},15)
     .fromTo(scProcess,{autoAlpha:0},{autoAlpha:1,duration:1},13.5)
     .fromTo(sxfP,{height:'0%'},{height:'100%',duration:2,ease:'power2.out'},14)
     .fromTo(pbar,{autoAlpha:0},{autoAlpha:1,duration:0.3},15.5)
@@ -496,7 +497,8 @@ function buildTimeline(){
     .to(pbar,{autoAlpha:0,duration:0.3},24)
 
     .addLabel('result',25)
-    .to(scProcess,{autoAlpha:0,duration:1},25)
+    .to(scProcess,{autoAlpha:0.1,y:'-50%',scale:0.85,duration:1.5},25)
+    .to(scProcess,{autoAlpha:0,y:0,scale:1,duration:0.5},27)
     .fromTo(scResult,{autoAlpha:0},{autoAlpha:1,duration:1},25.3)
     .fromTo(out,{scale:0,autoAlpha:0},{scale:1,autoAlpha:1,duration:1.2,ease:'back.out(1.7)'},25.8)
     .fromTo(ckC,{strokeDashoffset:100},{strokeDashoffset:0,duration:1.5,ease:'power2.out'},26.3)
@@ -505,7 +507,8 @@ function buildTimeline(){
     .call(function(){if(masterTL&&masterTL.scrollTrigger&&masterTL.scrollTrigger.direction===1)burst(out,'#6EE7B7',10)},[],26.5)
 
     .addLabel('comparison',29)
-    .to(scResult,{autoAlpha:0,duration:1},29)
+    .to(scResult,{autoAlpha:0.1,y:'-50%',scale:0.85,duration:1.5},29)
+    .to(scResult,{autoAlpha:0,y:0,scale:1,duration:0.5},31)
     .fromTo(scCompare,{autoAlpha:0},{autoAlpha:1,duration:1},29.3)
     .fromTo(baAft,{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)',duration:2,ease:'power2.inOut'},30)
     .fromTo(badges,{autoAlpha:0,x:-14},{autoAlpha:1,x:0,stagger:0.35,duration:0.5,ease:'back.out(1.5)'},31)
@@ -514,7 +517,8 @@ function buildTimeline(){
     .fromTo(dsW,{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:1},33)
 
     .addLabel('valueRecap',36)
-    .to(scCompare,{autoAlpha:0,duration:1},36)
+    .to(scCompare,{autoAlpha:0.1,y:'-50%',scale:0.85,duration:1.5},36)
+    .to(scCompare,{autoAlpha:0,y:0,scale:1,duration:0.5},38)
     .fromTo(scRecap,{autoAlpha:0},{autoAlpha:1,duration:1},36.3)
     .fromTo(vrItems,{autoAlpha:0,x:-16},{autoAlpha:1,x:0,stagger:0.35,duration:0.5,ease:'back.out(1.3)'},37)
     .fromTo(vrTry,{autoAlpha:0},{autoAlpha:1,duration:0.5},TL_DUR-0.5);
@@ -553,40 +557,44 @@ function buildTimeline(){
       else if(p<pRes) setStep(2);
       else if(p<pVr) setStep(3);
       else setStep(4);
-
-      nxt.innerHTML=getNxtText(p)+' '+ARROW;
     }
   });
 
   masterTL=tl;
 }
 
-nxt.addEventListener('click',function(){
+navDown.addEventListener('click',function(){
   if(!masterTL||!masterTL.scrollTrigger) return;
-  var st=masterTL.scrollTrigger;
   var curProg=masterTL.progress();
-
-  if(curProg>0.95){
-    switchIndustry();return;
-  }
-
+  if(curProg>0.95){switchIndustry();return}
   var dur=masterTL.duration();
   for(var i=0;i<LABEL_ORDER.length;i++){
     var lp=LABELS[LABEL_ORDER[i]]/dur;
-    if(lp>curProg+0.02){
-      gsap.to(window,{scrollTo:st.start+(st.end-st.start)*lp,duration:0.8,ease:'power2.inOut'});
-      return;
-    }
+    if(lp>curProg+0.02){scrollToLabel(LABEL_ORDER[i]);return}
+  }
+});
+
+navUp.addEventListener('click',function(){
+  if(!masterTL||!masterTL.scrollTrigger) return;
+  var curProg=masterTL.progress();
+  if(curProg<0.02) return;
+  var dur=masterTL.duration();
+  for(var i=LABEL_ORDER.length-1;i>=0;i--){
+    var lp=LABELS[LABEL_ORDER[i]]/dur;
+    if(lp<curProg-0.02){scrollToLabel(LABEL_ORDER[i]);return}
   }
 });
 
 vrTry.addEventListener('click',function(){switchIndustry()});
+src.addEventListener('click',function(){scrollToLabel('messyPreview')});
+cta.addEventListener('click',function(){scrollToLabel('processing')});
 
-src.addEventListener('click',function(){
-  if(!masterTL||!masterTL.scrollTrigger) return;
-  var st=masterTL.scrollTrigger;
-  var lp=LABELS.messyPreview/masterTL.duration();
-  gsap.to(window,{scrollTo:st.start+(st.end-st.start)*lp,duration:0.8,ease:'power2.inOut'});
+var STEP_LABELS={1:'intro',2:'processing',3:'result',4:'valueRecap'};
+stepsEl.querySelectorAll('.stp').forEach(function(s){
+  s.addEventListener('click',function(){
+    var label=STEP_LABELS[+s.dataset.n];
+    if(label) scrollToLabel(label);
+  });
 });
 
 function switchIndustry(){
@@ -624,7 +632,6 @@ industry=KEYS[0];
 indCards.querySelector('.ic').classList.add('on');
 renderAll();
 buildTimeline();
-nxt.innerHTML='Scroll down '+ARROW;
 </script>
 </body>
 </html>
