@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0B1120">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SageX Demo">
+<title>SageX - See the Difference</title>
+<meta property="og:title" content="SageX - See the Difference">
+<meta property="og:description" content="Pick your industry. See the mess your documents are in - and watch SageX clean them in seconds.">
+<meta property="og:type" content="website">
+<meta name="description" content="Interactive demo: see how SageX transforms messy documents into structured, AI-ready data - inside your cloud.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0B1120;--card:#141C2E;--elev:#1A2438;
+  --t1:#E2E8F0;--t2:#94A3B8;--t3:#64748B;
+  --blue:#3B82F6;--green:#34D399;--red:#F87171;--amber:#FBBF24;--orange:#FB923C;
+  --gblue:rgba(59,130,246,.3);--ggreen:rgba(52,211,153,.3);
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+}
+body{
+  font-family:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);color:var(--t1);
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:calc(12px + var(--sat)) 16px calc(16px + var(--sab));
+  -webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;
+  touch-action:manipulation;overflow-x:hidden;overscroll-behavior-y:contain;
+}
+.intro{font-size:14px;font-weight:500;color:var(--t2);text-align:center;margin-bottom:14px;max-width:340px;line-height:1.5}
+.pills{display:flex;gap:8px;width:100%;max-width:400px;margin-bottom:16px;justify-content:center}
+.pills button{
+  font-family:inherit;padding:8px 14px;border:1px solid rgba(255,255,255,.08);border-radius:24px;
+  background:var(--card);font-size:12px;font-weight:600;cursor:pointer;min-height:44px;
+  color:var(--t2);transition:all .25s;flex:1;text-align:center;
+}
+.pills button.on{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 0 16px var(--gblue)}
+
+.vpc{
+  width:100%;max-width:400px;border:1px solid rgba(59,130,246,.12);border-radius:20px;
+  padding:38px 20px 20px;position:relative;background:var(--card);transition:border-color .5s,box-shadow .5s;
+}
+.vpc.glow{border-color:rgba(52,211,153,.3);box-shadow:0 0 30px rgba(52,211,153,.08)}
+.vpc-tag{position:absolute;top:12px;left:16px;font-size:10px;font-weight:700;letter-spacing:.03em;color:rgba(59,130,246,.4)}
+.vpc-tag svg{vertical-align:-1px;margin-right:3px}
+.vpc-cloud{position:absolute;bottom:10px;right:16px;font-size:9px;font-weight:600;color:rgba(255,255,255,.15);letter-spacing:1.5px}
+.flow{display:flex;flex-direction:column;align-items:center}
+
+.fcard{
+  width:120px;min-height:108px;background:rgba(59,130,246,.06);border:1.5px solid rgba(59,130,246,.2);
+  border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;padding:14px 8px;transition:transform .3s,box-shadow .3s;
+}
+.fcard.pulse{animation:gpulse 2.5s ease-in-out infinite}
+.fcard .nm{font-size:13px;font-weight:700;text-align:center;line-height:1.3;color:var(--t1)}
+
+.ocard{
+  width:120px;min-height:108px;background:rgba(52,211,153,.06);border:1.5px solid rgba(52,211,153,.2);
+  border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;padding:14px 8px;transition:transform .3s,box-shadow .3s;
+}
+.ocard .nm{font-size:13px;font-weight:700;text-align:center;line-height:1.3;color:var(--green)}
+
+.ndg{
+  margin-top:10px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.25);color:var(--blue);
+  padding:8px 18px;border-radius:24px;font-size:14px;font-weight:700;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.ndg.bob{animation:bob 1.4s ease-in-out infinite}
+
+.conn{width:2px;height:24px;margin:6px 0;background:rgba(255,255,255,.06);border-radius:1px}
+
+.pw{width:100%;overflow:hidden;display:flex;flex-direction:column;align-items:center}
+.pc{border-radius:14px;overflow:hidden;width:100%;max-width:340px}
+.pc.messy{border:1px solid rgba(248,113,113,.2);background:var(--elev)}
+.pc.clean{border:1px solid rgba(52,211,153,.2);background:var(--elev)}
+.ph{padding:12px 16px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800}
+.pc.messy .ph{background:rgba(248,113,113,.08);color:var(--red)}
+.pc.clean .ph{background:rgba(52,211,153,.08);color:var(--green)}
+.pb{padding:16px}
+
+.dl{height:5px;border-radius:3px;margin-bottom:7px}
+.dl.m{background:rgba(255,255,255,.08)}
+.dl.c{background:rgba(255,255,255,.06);width:90%}
+
+.ips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ip{
+  display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;
+  font-size:13px;font-weight:700;white-space:nowrap;
+}
+.ip svg{flex-shrink:0}
+.ip.w{background:rgba(251,191,36,.08);color:var(--amber);border:1px solid rgba(251,191,36,.2)}
+.ip.e{background:rgba(248,113,113,.08);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+.ip.q{background:rgba(251,146,60,.08);color:var(--orange);border:1px solid rgba(251,146,60,.2)}
+
+.bp{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);border-radius:10px;
+  font-size:14px;font-weight:700;color:var(--green);margin-bottom:8px;
+}
+
+.ds{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06)}
+.ds-h{font-size:15px;font-weight:800;color:var(--green);margin-bottom:6px}
+.ds-p{font-size:14px;font-weight:500;color:var(--t2);line-height:1.5}
+
+.cta{
+  width:100%;max-width:340px;padding:16px 24px;margin:6px 0;
+  background:var(--blue);color:#fff;border:none;border-radius:14px;
+  font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;min-height:54px;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s;
+}
+.cta:disabled{background:rgba(255,255,255,.06);color:var(--t3);cursor:default;box-shadow:none}
+.cta:not(:disabled){box-shadow:0 0 20px var(--gblue)}
+.cta:not(:disabled):active{transform:scale(.97)}
+
+.sxw{position:relative;display:flex;flex-direction:column;align-items:center}
+.sx{
+  width:152px;height:58px;background:var(--elev);border-radius:16px;
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.06);transition:border-color .4s;
+}
+.sx.on{border-color:rgba(52,211,153,.3);box-shadow:0 0 24px var(--ggreen),0 0 48px rgba(52,211,153,.1)}
+.sx svg{height:22px;width:auto;position:relative;z-index:2}
+.sxf{position:absolute;bottom:0;left:0;right:0;height:0;
+  background:linear-gradient(to top,rgba(52,211,153,.25),rgba(59,130,246,.15));z-index:1;
+  border-radius:0 0 15px 15px;}
+
+.orb{position:absolute;top:50%;left:50%;width:0;height:0}
+.od{
+  position:absolute;width:5px;height:5px;background:var(--green);border-radius:50%;
+  box-shadow:0 0 8px var(--green),0 0 16px var(--ggreen);margin:-2.5px;
+}
+.od:nth-child(1){animation:orb 2.4s linear infinite}
+.od:nth-child(2){animation:orb 2.4s linear infinite .8s}
+.od:nth-child(3){animation:orb 2.4s linear infinite 1.6s}
+
+.pbar{width:152px;height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-top:8px}
+.pbar .fill{height:100%;width:0;background:var(--green);border-radius:2px;box-shadow:0 0 6px var(--ggreen)}
+
+.usp{
+  width:100%;max-width:320px;display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;margin-top:12px;
+}
+.usp svg{flex-shrink:0}
+.usp-h{font-size:17px;font-weight:700;color:var(--t1);line-height:1.3}
+.usp-s{font-size:14px;font-weight:500;color:var(--t2);margin-top:3px}
+
+.oz{
+  width:120px;min-height:108px;border:1.5px dashed rgba(255,255,255,.08);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.xdot{
+  position:absolute;width:8px;height:8px;border-radius:50%;left:50%;transform:translateX(-50%);
+  z-index:20;pointer-events:none;
+}
+.xdot::after{
+  content:'';position:absolute;width:3px;height:36px;bottom:100%;left:50%;transform:translateX(-50%);
+  border-radius:2px;opacity:.6;
+}
+.xdot.blue{background:var(--blue);box-shadow:0 0 12px var(--blue),0 0 28px var(--gblue)}
+.xdot.blue::after{background:linear-gradient(to bottom,transparent,var(--blue))}
+.xdot.green{background:var(--green);box-shadow:0 0 12px var(--green),0 0 28px var(--ggreen)}
+.xdot.green::after{background:linear-gradient(to bottom,transparent,var(--green))}
+
+.rp{
+  width:100%;max-width:400px;margin-top:16px;padding:14px;
+  background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;
+  font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;min-height:44px;
+  text-align:center;color:var(--t2);
+}
+
+@keyframes gpulse{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.2)}50%{box-shadow:0 0 0 14px rgba(59,130,246,0)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@keyframes orb{
+  0%{transform:rotate(0deg) translateX(52px) rotate(0deg);opacity:0}
+  8%{opacity:1}92%{opacity:1}
+  100%{transform:rotate(360deg) translateX(52px) rotate(-360deg);opacity:0}
+}
+</style>
+</head>
+<body>
+
+<div class="intro">Pick your industry. We'll show you the problem - and how SageX fixes it.</div>
+<div class="pills" id="pills"></div>
+
+<div class="vpc" id="vpc">
+  <div class="vpc-tag"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="rgba(59,130,246,.5)" stroke-width="1.5"><rect x="2.5" y="5.5" width="7" height="5" rx="1.5"/><path d="M4 5.5V4a2 2 0 014 0v1.5"/></svg> Your Cloud Perimeter</div>
+  <div class="vpc-cloud">aws · azure · gcp</div>
+
+  <div class="flow" id="flow">
+    <div class="fcard" id="src">
+      <div id="srcIco"></div>
+      <div class="nm" id="srcNm">Document</div>
+    </div>
+    <div class="ndg" id="sNdg" style="opacity:0"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 12h10"/></svg> Tap to preview</div>
+
+    <div id="mW" class="pw" style="display:none">
+      <div class="conn"></div>
+      <div class="pc messy" id="mC"></div>
+    </div>
+
+    <div class="conn"></div>
+    <button class="cta" id="cta" disabled>Clean with SageX
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </button>
+    <div class="conn"></div>
+
+    <div class="sxw" id="sxw">
+      <div class="sx" id="sx">
+        <div class="sxf" id="sxf"></div>
+        <svg viewBox="0 7 144 34" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.46 24.79c-1.37-1.3-3.55-2.31-6.49-3.02-.48-.13-.95-.24-1.39-.34-.46-.1-.91-.19-1.35-.29-1.62-.32-2.81-.66-3.52-1-.74-.36-1.11-.9-1.11-1.62 0-.48.19-.9.56-1.28.36-.37.88-.67 1.53-.9.65-.23 1.43-.35 2.31-.35 1.25 0 2.74.24 4.43.71 1.66.46 3.61 1.25 5.81 2.35v-5.78c-1.36-.76-2.95-1.37-4.72-1.81-1.79-.45-3.65-.68-5.52-.68-2.14 0-4.07.31-5.72.92-1.65.61-2.96 1.51-3.89 2.69C.47 15.57 0 16.98 0 18.57c0 2.04.76 3.65 2.24 4.79 1.5 1.15 3.9 2.06 7.11 2.71 2.33.45 4.03.93 5.04 1.42 1.04.5 1.57 1.17 1.57 1.98 0 .54-.22 1.01-.64 1.38-.41.37-.96.63-1.61.8-.65.16-1.35.25-2.1.25-1.87 0-3.87-.43-5.94-1.27-2-1.81-3.65-2.68-4.91-3.58v6.09c1.76 1.01 3.57 1.79 5.38 2.3 1.83.51 3.67.77 5.47.77 2.94 0 5.53-.62 7.68-1.84 2.14-1.21 3.22-3.16 3.22-5.8 0-1.88-.69-3.49-2.05-4.77z"/>
+          <path d="M44.67 13.18c-2.13-1.51-4.72-2.39-7.52-2.39-7.24 0-13.11 5.91-13.11 13.21 0 7.3 5.87 13.21 13.11 13.21 2.8 0 5.39-.89 7.52-2.39v1.62h5.59V11.92h-5.59v1.25zm-7.52 18.4c-4.16 0-7.53-3.4-7.53-7.58 0-4.19 3.37-7.58 7.53-7.58 4.15 0 7.38 3.26 7.52 7.32v.52c-.14 4.07-3.33 7.32-7.52 7.32z"/>
+          <path d="M67.6 26.39l6.14-.05c-.2 1.07-.69 2.13-1.36 2.93l-.12.14c-.15.16-.3.31-.46.46l-.04.04c-.6.54-1.28.98-2.03 1.29-.97.41-2.04.61-3.16.61-1.48 0-2.84-.35-4.03-1.04-1.19-.69-2.14-1.64-2.8-2.82-.67-1.19-1.01-2.52-1.01-3.95 0-1.43.34-2.76 1.01-3.97.67-1.19 1.61-2.15 2.8-2.84 1.19-.69 2.55-1.04 4.03-1.04 1.47 0 2.78.36 3.96 1.05.73.43 1.35.97 1.88 1.62l5.68-1.6c-1.04-1.76-2.43-3.22-4.17-4.35-2.16-1.4-4.63-2.11-7.36-2.11-2.47 0-4.77.6-6.85 1.8-2.07 1.19-3.75 2.81-4.98 4.82-1.24 2.01-1.86 4.24-1.86 6.62 0 2.38.62 4.6 1.84 6.61 1.22 2.01 2.9 3.63 4.99 4.8 2.09 1.18 5.4 1.77 7.87 1.77s4.64-.55 6.6-1.65c1.97-1.09 3.54-2.63 4.66-4.58 1.12-1.94 1.69-4.79 1.69-7.22v-2.21H64.57l3.04 4.78z"/>
+          <path d="M101.82 29c-.81.84-1.81 1.49-3 1.95-1.19.47-2.39.7-3.63.7-1.14 0-2.2-.2-3.19-.6-1-.4-1.82-1-2.49-1.81-.66-.81-1.11-1.77-1.34-2.9h20.07c.32-1.54.31-3.15-.05-4.83-.39-2-1.21-3.82-2.46-5.46-1.25-1.64-2.8-2.93-4.63-3.86-1.84-.93-3.81-1.4-5.92-1.4-2.37 0-4.58.59-6.62 1.77-2.05 1.18-3.67 2.78-4.87 4.81-1.2 2.03-1.8 4.25-1.8 6.67 0 2.35.59 4.54 1.76 6.57 1.17 2.03 2.78 3.64 4.82 4.83 2.05 1.19 4.29 1.78 6.73 1.78 2.47 0 4.85-.61 7.16-1.84 2.3-1.22 3.97-2.85 5.01-4.87l-5.55-1.5zm-12.35-10.02c.63-.79 1.44-1.42 2.41-1.91.97-.48 2.06-.73 3.27-.73 1.2 0 2.28.24 3.24.72.96.48 1.74 1.12 2.36 1.91.62.79 1.06 1.65 1.32 2.58H88.18c.23-.93.66-1.79 1.29-2.57z"/>
+          <path d="M106.52 6.92l10.67 16.98-.08.12-10.59 17.07 7.2-.01 11.5-17.18-11.5-16.98h-7.2z"/>
+          <path d="M133.24 23.89l.02-.04L143.9 6.91h-7.19l-11.5 16.99 11.5 17.18h7.2l-10.68-17.19z"/>
+        </svg>
+      </div>
+      <div class="orb" id="orb" style="display:none"><div class="od"></div><div class="od"></div><div class="od"></div></div>
+    </div>
+    <div class="pbar" id="pbar" style="opacity:0"><div class="fill" id="pfill"></div></div>
+    <div class="usp" id="usp" style="opacity:0">
+      <div id="uspIco"></div>
+      <div><div class="usp-h" id="uspH"></div><div class="usp-s" id="uspS"></div></div>
+    </div>
+
+    <div class="conn"></div>
+
+    <div class="oz" id="oz">
+      <div class="ocard" id="out" style="opacity:0;transform:scale(0)">
+        <svg viewBox="0 0 36 36" width="40" height="40">
+          <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(52,211,153,.2)" stroke-width="2"/>
+          <circle id="ckC" cx="18" cy="18" r="16" fill="none" stroke="var(--green)" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100"/>
+          <path id="ckP" d="M11 18l5 5 9-9" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="28" stroke-dashoffset="28"/>
+        </svg>
+        <div class="nm" id="oNm">Cleaned</div>
+      </div>
+    </div>
+    <div class="ndg" id="oNdg" style="opacity:0"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 12h10"/></svg> Tap to see result</div>
+
+    <div id="cW" class="pw" style="display:none">
+      <div class="conn"></div>
+      <div class="pc clean" id="cC"></div>
+    </div>
+  </div>
+
+  <div class="xdot" id="xdot" style="display:none"></div>
+</div>
+
+<button class="rp" id="rp" style="display:none">Try another industry</button>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
+<script>
+var IC={
+  warn:'<svg viewBox="0 0 14 14" width="13" height="13"><path d="M7 1.5L12.5 12H1.5z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><line x1="7" y1="6" x2="7" y2="8.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="10.2" r=".6" fill="currentColor"/></svg>',
+  err:'<svg viewBox="0 0 14 14" width="13" height="13"><circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
+  quest:'<svg viewBox="0 0 14 14" width="13" height="13"><circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5.5a1.8 1.8 0 013 1.3c0 1-1.5 1.2-1.5 2.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="10.8" r=".5" fill="currentColor"/></svg>',
+  check:'<svg viewBox="0 0 20 20" width="18" height="18"><circle cx="10" cy="10" r="9" fill="var(--green)"/><path d="M6 10l3 3 5-5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--blue)" stroke-width="1.8"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>',
+  link:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>',
+  target:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--blue)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'
+};
+function docSvg(sym){
+  return '<svg viewBox="0 0 44 56" width="44" height="56"><rect x="1" y="1" width="42" height="54" rx="5" fill="rgba(59,130,246,.06)" stroke="rgba(59,130,246,.25)" stroke-width="1.2"/><polygon points="30,1 43,14 30,14" fill="rgba(59,130,246,.1)" stroke="rgba(59,130,246,.2)" stroke-width=".8"/><text x="22" y="40" text-anchor="middle" fill="rgba(59,130,246,.5)" font-size="18" font-weight="800" font-family="Manrope,sans-serif">'+sym+'</text></svg>';
+}
+
+var USPS=[
+  {ico:IC.lock,h:'Your data never leaves your cloud',s:'Deployed in your VPC in under 3 hours'},
+  {ico:IC.link,h:'Every extraction traced to its source',s:'Page, section, table, cell - all auditable'},
+  {ico:IC.target,h:'Works on any document type',s:'Built on content, not document format'}
+];
+
+var DATA={
+  'financial-services':{
+    pill:'Financial Services',doc:'ESG Compliance Report',sym:'$',
+    issues:[
+      {t:'Broken Tables',c:'e'},{t:'Missing Fields',c:'e'},
+      {t:"Columns Don't Line Up",c:'w'},{t:'Looks Different Every Page',c:'q'},
+      {t:'200+ Pages of Chaos',c:'e'}
+    ],
+    badges:['Compliance Verified','ESG Data Pulled Out','Every Change Tracked'],
+    stat:'What took months? Done in 2 hours.',
+    tag:"Your compliance team's Monday morning, automated",
+    ds:'Feed into your compliance engine, RAG pipeline, or audit system. Every field traced to its source.'
+  },
+  manufacturing:{
+    pill:'Manufacturing',doc:'Supplier Invoice (Scan)',sym:'\u2261',
+    issues:[
+      {t:'Poor Scan Quality',c:'e'},{t:'Mismatched Line Items',c:'w'},
+      {t:"Numbers Don't Add Up",c:'e'},{t:"Can't Find the PO Number",c:'q'},
+      {t:'Text Too Blurry to Read',c:'w'}
+    ],
+    badges:['Line Items Matched','PO Numbers Matched','$2/doc'],
+    stat:'$20 per doc? Now $2.',
+    tag:'Your AP team reviews exceptions, not every invoice',
+    ds:'Push to your ERP or AP automation. Every line item matched and verified.'
+  },
+  healthcare:{
+    pill:'Healthcare',doc:'Insurance Claim Form',sym:'+',
+    issues:[
+      {t:"Can't Tell What's Checked",c:'q'},{t:'Handwritten Fields',c:'w'},
+      {t:'Stamps Over Data',c:'e'},{t:'Missing Medical Codes',c:'e'},
+      {t:'Text Too Faded to Read',c:'w'}
+    ],
+    badges:['HIPAA Compliant','Claims Structured','Medical Codes Found'],
+    stat:'Days of processing? Minutes.',
+    tag:'Claims come in as chaos. Your AI needs them clean.',
+    ds:'Route to your claims engine or coding system. Every field resolved and tagged.'
+  }
+};
+var KEYS=Object.keys(DATA);
+
+var S={IDLE:0,MESSY:1,PROC:2,DONE:3,CLEAN:4};
+var state,industry,timers=[],atl=null;
+
+var src=document.getElementById('src'),srcIco=document.getElementById('srcIco'),srcNm=document.getElementById('srcNm'),
+    sNdg=document.getElementById('sNdg'),mW=document.getElementById('mW'),mC=document.getElementById('mC'),
+    cta=document.getElementById('cta'),sx=document.getElementById('sx'),sxf=document.getElementById('sxf'),
+    sxw=document.getElementById('sxw'),orb=document.getElementById('orb'),vpc=document.getElementById('vpc'),
+    pbar=document.getElementById('pbar'),pfill=document.getElementById('pfill'),
+    usp=document.getElementById('usp'),uspIco=document.getElementById('uspIco'),
+    uspH=document.getElementById('uspH'),uspS=document.getElementById('uspS'),
+    oz=document.getElementById('oz'),out=document.getElementById('out'),oNm=document.getElementById('oNm'),
+    oNdg=document.getElementById('oNdg'),ckC=document.getElementById('ckC'),ckP=document.getElementById('ckP'),
+    cW=document.getElementById('cW'),cC=document.getElementById('cC'),
+    xdot=document.getElementById('xdot'),rp=document.getElementById('rp'),pills=document.getElementById('pills');
+
+function later(fn,ms){var t=setTimeout(fn,ms);timers.push(t);return t}
+function clr(){timers.forEach(clearTimeout);timers=[];if(atl){atl.kill();atl=null}}
+var PIC={w:IC.warn,e:IC.err,q:IC.quest};
+
+function renderMessy(d){
+  var W=[92,65,84,50,76,40,58,72],O=[0,8,-2,12,3,16,0,10],R=[0,0,.7,-.4,0,.9,-.5,0];
+  var h='<div class="ph">'+IC.err+' <span>'+d.doc+'</span></div><div class="pb">',pi=0,li=0;
+  for(var r=0;r<12;r++){
+    if(r%3===2&&pi<d.issues.length){
+      h+='<div class="ips">';
+      h+='<span class="ip '+d.issues[pi].c+'">'+PIC[d.issues[pi].c]+' '+d.issues[pi].t+'</span>';pi++;
+      if(pi<d.issues.length){h+='<span class="ip '+d.issues[pi].c+'">'+PIC[d.issues[pi].c]+' '+d.issues[pi].t+'</span>';pi++}
+      h+='</div>';
+    }else if(li<W.length){
+      h+='<div class="dl m" style="width:'+W[li]+'%;margin-left:'+O[li]+'%;transform:rotate('+R[li]+'deg)"></div>';li++;
+    }
+  }
+  while(pi<d.issues.length){h+='<div class="ips"><span class="ip '+d.issues[pi].c+'">'+PIC[d.issues[pi].c]+' '+d.issues[pi].t+'</span></div>';pi++}
+  h+='</div>';mC.innerHTML=h;
+}
+function renderClean(d){
+  var h='<div class="ph">'+IC.check+' <span>Cleaned '+d.doc+'</span></div><div class="pb">';
+  for(var i=0;i<5;i++)h+='<div class="dl c"></div>';
+  h+='<div style="margin-top:12px">';
+  d.badges.forEach(function(b){h+='<div class="bp">'+IC.check+' '+b+'</div>'});
+  h+='<div class="ds"><div class="ds-h">Now your AI tools can actually work</div><div class="ds-p">'+d.ds+'</div></div>';
+  h+='</div></div>';cC.innerHTML=h;
+}
+function setContent(){
+  var d=DATA[industry];
+  srcIco.innerHTML=docSvg(d.sym);srcNm.textContent=d.doc;oNm.textContent='Cleaned';
+  renderMessy(d);renderClean(d);
+}
+function showUsp(i){
+  var d=DATA[industry],item;
+  if(i<3)item=USPS[i];
+  else item={ico:IC.clock,h:d.stat,s:d.tag};
+  uspIco.innerHTML=item.ico;uspH.textContent=item.h;uspS.textContent=item.s;
+  gsap.fromTo(usp,{opacity:0,y:12},{opacity:1,y:0,duration:.35,ease:'back.out(1.5)'});
+}
+function hideUsp(){gsap.to(usp,{opacity:0,y:-8,duration:.25})}
+
+function resetAll(){
+  clr();
+  gsap.killTweensOf([src,sNdg,cta,sx,sxf,out,oNdg,mW,cW,pbar,pfill,usp,xdot,ckC,ckP]);
+  gsap.set(src,{scale:1,opacity:1,height:'auto',marginBottom:''});
+  gsap.set(out,{scale:0,opacity:0});
+  gsap.set([sNdg,oNdg],{opacity:0});
+  gsap.set([pbar,usp],{opacity:0});
+  gsap.set(pfill,{width:'0%'});
+  gsap.set(sxf,{height:0});
+  gsap.set(ckC,{strokeDashoffset:100});
+  gsap.set(ckP,{strokeDashoffset:28});
+  src.classList.remove('pulse');sNdg.classList.remove('bob');oNdg.classList.remove('bob');
+  sx.classList.remove('on');vpc.classList.remove('glow');orb.style.display='none';
+  cta.disabled=true;xdot.style.display='none';
+  mW.style.display='none';mW.style.height='';
+  cW.style.display='none';cW.style.height='';
+  rp.style.display='none';
+}
+
+function go(s){
+  if(s===S.IDLE)resetAll();
+  else{clr();if(atl){atl.kill();atl=null}}
+  state=s;var d=DATA[industry];
+
+  if(s===S.IDLE){
+    setContent();src.classList.add('pulse');
+    later(function(){gsap.to(sNdg,{opacity:1,duration:.5});sNdg.classList.add('bob')},1200);
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+  if(s===S.MESSY){
+    src.classList.remove('pulse');sNdg.classList.remove('bob');
+    gsap.to(sNdg,{opacity:0,duration:.2});
+    gsap.to(src,{scale:.9,duration:.3,ease:'power2.out'});
+    mW.style.display='flex';
+    gsap.from(mW,{height:0,duration:.5,ease:'power2.out',onComplete:function(){
+      mW.style.height='auto';later(function(){cta.scrollIntoView({behavior:'smooth',block:'nearest'})},100);
+    }});
+    later(function(){
+      gsap.from(mC.querySelectorAll('.ip'),{opacity:0,y:10,stagger:.15,duration:.35,ease:'back.out(1.7)'});
+    },300);
+    later(function(){mC.style.animation='shake .5s ease-in-out';later(function(){mC.style.animation=''},600)},600);
+    later(function(){
+      cta.disabled=false;
+      gsap.fromTo(cta,{boxShadow:'0 0 0 0 rgba(59,130,246,0)'},{boxShadow:'0 0 0 8px rgba(59,130,246,.12)',duration:.7,yoyo:true,repeat:2});
+    },700);
+    return;
+  }
+  if(s===S.PROC){
+    cta.disabled=true;
+    gsap.to(mW,{height:0,opacity:0,duration:.35,ease:'power2.in',onComplete:function(){
+      mW.style.display='none';mW.style.height='';mW.style.opacity='';
+      var vr=vpc.getBoundingClientRect(),sr=src.getBoundingClientRect(),sxr=sx.getBoundingClientRect();
+      var y1=sr.top+sr.height/2-vr.top,y2=sxr.top+sxr.height/2-vr.top;
+      xdot.style.display='block';xdot.className='xdot blue';gsap.set(xdot,{top:y1});
+
+      atl=gsap.timeline();
+      atl.to(src,{scale:0,opacity:0,duration:.5,ease:'power2.in'})
+        .to(xdot,{top:y2,duration:.7,ease:'power2.inOut'},'<.1')
+        .to(src,{height:0,marginBottom:0,duration:.25})
+        .call(function(){xdot.style.display='none'})
+        .to(sxf,{height:'100%',duration:.6,ease:'power2.out'})
+        .call(function(){sx.classList.add('on');vpc.classList.add('glow');orb.style.display='block'})
+        .to(pbar,{opacity:1,duration:.15})
+        .to(pfill,{width:'100%',duration:7,ease:'none'})
+        .call(function(){showUsp(0)},[],'-=7')
+        .call(function(){showUsp(1)},[],'-=5.3')
+        .call(function(){showUsp(2)},[],'-=3.6')
+        .call(function(){showUsp(3)},[],'-=1.8')
+        .call(function(){hideUsp();orb.style.display='none'})
+        .to([pbar],{opacity:0,duration:.3})
+        .to(sxf,{height:0,duration:.3},'<')
+        .call(function(){sx.classList.remove('on')})
+        .call(function(){
+          var vr2=vpc.getBoundingClientRect(),sxr2=sx.getBoundingClientRect(),ozr=oz.getBoundingClientRect();
+          var gy1=sxr2.top+sxr2.height/2-vr2.top,gy2=ozr.top+ozr.height/2-vr2.top;
+          xdot.style.display='block';xdot.className='xdot green';gsap.set(xdot,{top:gy1});
+          gsap.to(xdot,{top:gy2,duration:.7,ease:'power2.inOut',onComplete:function(){
+            xdot.style.display='none';vpc.classList.remove('glow');go(S.DONE);
+          }});
+        });
+      later(function(){sxw.scrollIntoView({behavior:'smooth',block:'center'})},600);
+    }});
+    return;
+  }
+  if(s===S.DONE){
+    gsap.to(out,{scale:1,opacity:1,duration:.6,ease:'back.out(1.7)'});
+    later(function(){
+      gsap.to(ckC,{strokeDashoffset:0,duration:.8,ease:'power2.out'});
+      gsap.to(ckP,{strokeDashoffset:0,duration:.5,delay:.4,ease:'power2.out'});
+    },300);
+    later(function(){
+      gsap.to(oNdg,{opacity:1,duration:.5});oNdg.classList.add('bob');
+      later(function(){oNdg.scrollIntoView({behavior:'smooth',block:'nearest'})},100);
+    },800);
+    return;
+  }
+  if(s===S.CLEAN){
+    oNdg.classList.remove('bob');gsap.to(oNdg,{opacity:0,duration:.2});
+    gsap.to(out,{scale:.9,duration:.3,ease:'power2.out'});
+    cW.style.display='flex';
+    gsap.from(cW,{height:0,duration:.5,ease:'power2.out',onComplete:function(){cW.style.height='auto'}});
+    later(function(){
+      gsap.from(cC.querySelectorAll('.bp'),{opacity:0,x:-12,stagger:.2,duration:.45,ease:'back.out(1.7)'});
+    },350);
+    later(function(){
+      rp.style.display='';gsap.from(rp,{opacity:0,y:10,duration:.3});
+      later(function(){rp.scrollIntoView({behavior:'smooth',block:'nearest'})},100);
+    },1200);
+  }
+}
+
+src.addEventListener('click',function(){if(state===S.IDLE)go(S.MESSY)});
+out.addEventListener('click',function(){if(state===S.DONE)go(S.CLEAN)});
+cta.addEventListener('click',function(){if(state===S.MESSY&&!cta.disabled)go(S.PROC)});
+rp.addEventListener('click',function(){
+  rp.style.display='none';
+  industry=KEYS[(KEYS.indexOf(industry)+1)%KEYS.length];
+  pills.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.dataset.k===industry)});
+  go(S.IDLE);
+});
+KEYS.forEach(function(k){
+  var b=document.createElement('button');b.textContent=DATA[k].pill;b.dataset.k=k;
+  b.addEventListener('click',function(){
+    if(k===industry&&state===S.IDLE)return;industry=k;
+    pills.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x.dataset.k===k)});
+    go(S.IDLE);
+  });
+  pills.appendChild(b);
+});
+industry=KEYS[0];pills.querySelector('button').classList.add('on');go(S.IDLE);
+</script>
+</body>
+</html>
